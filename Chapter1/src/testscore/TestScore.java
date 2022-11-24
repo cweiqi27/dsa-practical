@@ -1,8 +1,8 @@
-package question_one;
+package testscore;
 
 import java.util.*;
 
-public class TestScores {
+public class TestScore {
     private final List<Integer> scoreList = new ArrayList<>();
     Scanner input = new Scanner(System.in);
 
@@ -129,7 +129,7 @@ public class TestScores {
     }
 
     public static void main(String[] args) {
-        TestScores testScores = new TestScores();
+        TestScore testScores = new TestScore();
         testScores.mainMenu();
     }
 

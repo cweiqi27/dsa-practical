@@ -14,6 +14,8 @@ public class RecordResults extends javax.swing.JFrame {
 
   private List<Runner> runnerList = new ArrayList<>();
   private List<Runner> finisherList = new ArrayList<>();
+
+  private HashSet<Integer> finisherSet = new HashSet<>();
   private int currentPosition = 1;
   private Runner runner;
 
@@ -103,6 +105,7 @@ public class RecordResults extends javax.swing.JFrame {
     jtaResults.setColumns(20);
     jtaResults.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
     jtaResults.setRows(5);
+    jtaResults.setText("MARATHON RESULTS");
     jScrollPane1.setViewportView(jtaResults);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -166,26 +169,43 @@ public class RecordResults extends javax.swing.JFrame {
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-  private void jtfNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfNameActionPerformed
-  }//GEN-LAST:event_jtfNameActionPerformed
+  private void jtfNameActionPerformed(java.awt.event.ActionEvent evt) {
+
+  }
 
   private void jbtAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtAddActionPerformed
   }//GEN-LAST:event_jbtAddActionPerformed
 
-  private void jbtConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtConfirmActionPerformed
-
-  }//GEN-LAST:event_jbtConfirmActionPerformed
+  private void jbtConfirmActionPerformed(java.awt.event.ActionEvent evt) {
+    if(finisherSet.contains(runner.getNumber())) {
+      jtfName.setText("Runner already added");
+    } else {
+      jtaResults.append("\n" + currentPosition + ". No. " + runner.getNumber() + "     " + runner.getName());
+      finisherSet.add(runner.getNumber());
+      currentPosition++;
+    }
+  }
 
   private void jtfCurrentPositionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfCurrentPositionActionPerformed
   }//GEN-LAST:event_jtfCurrentPositionActionPerformed
 
-  private void jtfNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfNumberActionPerformed
-    
-  }//GEN-LAST:event_jtfNumberActionPerformed
+  private void jtfNumberActionPerformed(java.awt.event.ActionEvent evt) {
+    String runnerNumberUserInput = jtfNumber.getText();
+    int runnerNumber = Integer.parseInt(runnerNumberUserInput);
+    runner = null;
+
+    try {
+      runner = runnerList.get(runnerNumber);
+    } catch(NullPointerException | IndexOutOfBoundsException e) {
+      jtfName.setText("Runner does not exist");
+    }
+
+    jtfName.setText(runner.getName());
+  }
 
   private void initializeList() {
     try {
-      File file = new File("runners.dat");
+      File file = new File("Chapter1/runners.dat");
       ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(file));
       runnerList = (ArrayList<Runner>) (oiStream.readObject());
       oiStream.close();
