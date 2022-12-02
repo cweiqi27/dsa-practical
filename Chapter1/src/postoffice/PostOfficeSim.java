@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import javax.swing.JFrame;
@@ -93,7 +94,14 @@ public class PostOfficeSim extends javax.swing.JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            Customer nextCustomer = q.poll();
+            nextCustomer.setServeTime(new GregorianCalendar());
+            int counterIndex = Character.getNumericValue(e.getActionCommand().charAt(counterNoIndex));
+            Objects.requireNonNull(nextCustomer).setCounter(counterIndex);
+            updateDisplay(nextCustomer);
+            announceNumber(nextCustomer);
 
+            serviceList.add(nextCustomer);
         }
 
     }
@@ -377,6 +385,13 @@ public class PostOfficeSim extends javax.swing.JFrame {
         reportFrame.setSize(600, 800);
         reportFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         reportFrame.setVisible(true);
+
+        for(int i = 0; i < serviceList.size(); i++) {
+            Customer customer = serviceList.get(i);
+            String indexStr = String.format("%-10s", i + ". ");
+            String waitingTime = String.format("%-15s", customer.getWaitingTime());
+            jtaReport.append(indexStr + customer + waitingTime + "\n");
+        }
     }//GEN-LAST:event_jbtReportActionPerformed
 
     private void jbtCounter5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtCounter5ActionPerformed
@@ -384,7 +399,10 @@ public class PostOfficeSim extends javax.swing.JFrame {
     }//GEN-LAST:event_jbtCounter5ActionPerformed
 
     private void jbtTakeNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtTakeNumberActionPerformed
-
+        Customer customer = new Customer(currentNo);
+        q.offer(customer);
+        jtaSlip.setText("Your number: " + currentNo);
+        currentNo++;
     }//GEN-LAST:event_jbtTakeNumberActionPerformed
 
     private void jtfRow2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfRow2ActionPerformed
